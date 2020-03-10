@@ -1,0 +1,443 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}รายงานการขาย | 945 Agent Report{% endblock %}
+
+{% block body %}
+	<style>
+		/* Simple CSS3 Fade-in-down Animation */
+		.fadeInDown {
+			-webkit-animation-name: fadeInDown;
+			animation-name: fadeInDown;
+			-webkit-animation-duration: 1s;
+			animation-duration: 1s;
+			-webkit-animation-fill-mode: both;
+			animation-fill-mode: both;
+		}
+
+		@-webkit-keyframes fadeInDown {
+			0% {
+				opacity: 0;
+				-webkit-transform: translate3d(0, -100%, 0);
+				transform: translate3d(0, -100%, 0);
+			}
+			100% {
+				opacity: 1;
+				-webkit-transform: none;
+				transform: none;
+			}
+		}
+
+		@keyframes fadeInDown {
+			0% {
+				opacity: 0;
+				-webkit-transform: translate3d(0, -100%, 0);
+				transform: translate3d(0, -100%, 0);
+			}
+			100% {
+				opacity: 1;
+				-webkit-transform: none;
+				transform: none;
+			}
+		}
+
+		.hiddenRow {
+			padding: 0 !important;
+		}
+
+		/* Simple CSS3 Fade-in Animation */
+		@-webkit-keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		@-moz-keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		.centered {
+			margin-top: 5%;
+		}
+
+		.button {
+			background-color: #1c87c9;
+			border: none;
+			color: white;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		.card {
+			margin-top: 20px;
+
+
+		}
+
+		.card-header {
+			text-align: center;
+			padding-bottom: 5px;
+			padding-top: 5px;
+			background-color: #D8BFD8;
+		}
+
+		.card-footer {
+			background-color: #FFFFFF;
+			border-color: #FFFFFF;
+		}
+
+		label {
+			margin-bottom: 0px;
+		}
+
+		a {
+			color: #6f42c1;
+		}
+
+		a:hover {
+			color: #7c1da2;
+		}
+
+		.list-group-item {
+			background-color: #F5F5F5;
+		}
+
+	</style>
+	<div class="container-fluid fadeInDown centered">
+		<div class="row justify-content-center">
+			<div class="col-sm-12 col-md-12">
+				<div class="card">
+					<div class="card-header" id="card-style" style="text-align: center;">
+						<label class="text-header"> <i class="fa fa-address-card"></i> &nbsp;รายงานการขาย
+							(ผลลัพธ์ทั้งหมด
+							<b>{{ reportData.getTotalItemCount }}</b> รายการ)</label>
+					</div>
+					<div class="card-body">
+						{% for label, flashes in app.session.flashbag.all %}
+							{% if ( label == 'error' ) %}
+								<div class="alert alert-danger alert-dismissible fade show">
+									<div class="text-center">
+										<p>{{ flashes[0] }}</p>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+						<div>
+							<div class="row">
+								<div class="col-xs-6 col-sm-6 col-md-6">
+									<button class="btn btn-outline-primary btn-search form-control"
+									        data-toggle="collapse" data-target="#search" style="margin-bottom: 5px;">
+										ค้นหา
+									</button>
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6">
+									<a href="{{ path('report') }}">
+										<button class="btn btn-outline-danger form-control" style="margin-bottom: 5px;">
+											เคลียร์
+										</button>
+									</a>
+								</div>
+							</div>
+
+
+							<div id="search" class="collapse">
+								<form action="" method="get" autocomplete="off" id="myForm">
+
+									<div class="row" style="text-align: center;">
+										<div class="col-sm-1 col-md-1">
+
+										</div>
+										<div class="col-sm-10 col-md-10">
+											<b style="font-size: 18px; color: red; margin-top: 20px;">*กรุณาระบุการค้นหาได้
+												1 การค้นหาเท่านั้น</b>
+										</div>
+										<div class="col-sm-1 col-md-1">
+
+										</div>
+
+									</div>
+
+									<div class="card">
+										<div class="card-header">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" href="#collapse1"><i class="fa fa-search"
+												                                               aria-hidden="true"></i>
+													<label style="font-size: 19px;">ค้นหาด้วยสถานะ</label></a>
+											</h4>
+										</div>
+										<div id="collapse1" class="panel-collapse collapse bodyinin">
+											<div class="card-body bodyinin">
+												<div class="form-check">
+													<input id="check1" class="form-check-input" type="checkbox">
+													<label class="form-check-label"
+													       for="exampleCheck1">เลือกวันที่</label>
+												</div>
+												{{ form_start(form) }}
+												<div class="row" style="margin-bottom: 5px;">
+													<div class="col-md-6">
+														{{ form_widget(form.getMonth, {"attr": {"class" : "form-control month"}}) }}
+													</div>
+													<div class="col-md-6">
+														{{ form_widget(form.getYear, {"attr": {"class" : "select-items form-control year"}}) }}
+													</div>
+												</div>
+
+
+												<ul class="list-group">
+													{% if not app.request.query.get("date") and not app.request.query.get("status") %}
+														<li class="list-group-item">วันที่ : <b>{{ date }}</b></li>
+													{% else %}
+														<li class="list-group-item">วันที่ :
+															<b>{{ app.request.query.get("date") }}</b></li>
+													{% endif %}
+												</ul>
+												<div class="d-flex justify-content-center"
+												     style="margin-top: 5px; float: right;">
+													{% set date = form.getYear.vars.data~'-'~ form.getMonth.vars.data %}
+													{% for t, m in testdata %}
+														<a class="link">
+															<button onclick="link_href({{ m[0] }})" type="button"
+															        class="btn btn-outline-secondary btn-search"
+															        style="margin: 4px;">
+																{{ t }} <span
+																		class="badge badge-light">{{ m | length | number_format(0, '.', ',') }}</span>
+																<span class="sr-only">unread messages</span>
+															</button>
+														</a>
+													{% endfor %}
+
+
+												</div>
+											</div>
+										</div>
+										{{ form_end(form) }}
+									</div>
+
+
+									<div class="card">
+										<form action="" method="get" autocomplete="off">
+											<div class="card-header">
+												<h4 class="panel-title">
+													<a data-toggle="collapse" href="#collapse2"><i class="fa fa-search"
+													                                               aria-hidden="true"></i>
+														<label style="font-size: 19px;">ค้นหาด้วย Invoice</label></a>
+												</h4>
+											</div>
+											<div id="collapse2" class="panel-collapse collapse bodyinin">
+												<div class="card-body bodyinin">
+													<div class="input-group mb-3">
+														<input type="text" name="search" class="form-control"
+														       id="search"
+														       placeholder="ค้นหา Invoice">
+													</div>
+												</div>
+												<div class="card-footer float-md-right">
+													<button class="btn btn btn-outline-secondary btn-search"
+													        type="submit">ค้นหา
+													</button>
+												</div>
+
+											</div>
+										</form>
+									</div>
+
+
+									<div class="card">
+										<form action="" method="get" autocomplete="off">
+											<div class="card-header">
+												<h4 class="panel-title">
+													<a data-toggle="collapse" href="#collapse3"><i class="fa fa-search"
+													                                               aria-hidden="true"></i>
+														<label style="font-size: 19px;">ค้นหาด้วยวันที่</label></a>
+												</h4>
+											</div>
+											<div id="collapse3" class="panel-collapse collapse bodyinin">
+												<div class="card-body bodyinin">
+													<label>เลือกวันที่</label>
+													<div class="row" style="margin-bottom: 5px;">
+														<div class="col-md-6">
+															<input type="text" name="sdate" class="form-control"
+															       id="startDate"
+															       placeholder="วันที่">
+														</div>
+														<div class="col-md-6">
+															<input type="text" name="edate" class="form-control"
+															       id="endDate"
+															       placeholder="ถึงวันที่">
+														</div>
+													</div>
+												</div>
+												<div class="card-footer float-md-right">
+													<button class="btn btn btn-outline-secondary btn-search"
+													        type="submit">
+														ค้นหา
+													</button>
+												</div>
+											</div>
+										</form>
+									</div>
+
+									{% if app.request.query.get("sdate") and app.request.query.get("edate") or app.request.query.get("search") or app.request.query.get("status") %}
+										<h4>ผลการค้นหา</h4>
+									{% endif %}
+									<ul class="list-group">
+										{% if app.request.query.get("status") %}
+											{% if app.request.query.get("status") == '101' %}
+												{% set statusName = 'ยกเลิกรายการ' %}
+											{% elseif app.request.query.get("status") == '102' %}
+												{% set statusName = 'รอชำระเงิน' %}
+											{% elseif app.request.query.get("status") == '103' %}
+												{% set statusName = 'ชำระเงินแล้ว' %}
+											{% elseif app.request.query.get("status")== '104' %}
+												{% set statusName = 'จัดส่งแล้ว' %}
+											{% elseif app.request.query.get("status") == '105' %}
+												{% set statusName = 'สินค้าถึงปลายทาง' %}
+											{% elseif app.request.query.get("status") == '106' %}
+												{% set statusName = 'สินค้าตีกลับ' %}
+											{% endif %}
+											<li class="list-group-item">สถานะ :
+												<b>{{ statusName }}</b></li>
+										{% endif %}
+										{% if app.request.query.get("search") %}
+											<li class="list-group-item">ค้นหา :
+												<b>{{ app.request.query.get("search") }}</b></li>
+										{% endif %}
+										{% if app.request.query.get("sdate") and app.request.query.get("edate") %}
+											<li class="list-group-item">วันที่ :
+												<b>{{ app.request.query.get("sdate") }}</b> ถึง
+												<b>{{ app.request.query.get("edate") }}</b></li>
+										{% endif %}
+									</ul>
+								</form>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+				<div class="table-responsive-md">
+					<table class="table  table-bordered table-hover">
+						<thead>
+						<tr>
+							<th>Inv.</th>
+							<th>Tracking</th>
+							<th>ผู้รับ</th>
+							<th>ทำรายการ</th>
+							<th>ส่งออก</th>
+							<th>สถานะ</th>
+							<th>มูลค่า</th>
+							<th>ค่าส่ง</th>
+							<th>ส่วนลด</th>
+							<th>รวม</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% if reportData is not empty %}
+							{% for k, report in reportData %}
+								<tr data-toggle="collapse" data-target="#{{ k }}"
+								    class="accordion-toggle">
+									<td>{{ report.paymentInvoice }}</td>
+									{% if report.mailcode != null %}
+										<td>{{ report.mailcode }}</td>
+									{% else %}
+										<td style="text-align: center;"> -</td>
+									{% endif %}
+									<td style="text-align: left;">{{ report.ordername }}</td>
+									<td style="text-align: center;">{{ report.orderdate | date('Y-m-d H:i:s') }}</td>
+									<td style="text-align: center;">{{ report.sendmaildate | date('Y-m-d H:i:s') }}</td>
+
+									<td style="text-align: left;">{{ report.orderstatus }}</td>
+									<td style="text-align: right;">{{ report.paymentAmt | number_format(2, '.', ',') }}</td>
+									<td style="text-align: right;">{{ report.transportprice | number_format(2, '.', ',') }}</td>
+									<td style="text-align: right;">{{ report.paymentDiscount | number_format(2, '.', ',') }}</td>
+									<td style="text-align: right;">{{ (report.result) | number_format(2, '.', ',') }}</td>
+								</tr>
+								<tr>
+									<td colspan="10" class="hiddenRow">
+										<div class="accordian-body collapse" id="{{ k }}">
+											{% for r in report.merchantObj %}
+												<div class="alert alert-info"
+												     style="margin-top: 20px;margin-left: 15px; margin-right: 15px;"
+												     role="alert">
+													ชื่อสินค้า : <b>{{ r.productname }}</b><br>จำนวน :
+													<b>{{ r.productorder }}</b><br>ค่า COM :
+													<b>{{ (r.productCommission) | number_format(2, '.', ',') }}</b><br>รวม
+													:
+													<b>{{ (r.result) | number_format(2, '.', ',') }}
+													</b>
+												</div>
+											{% endfor %}
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						{% else %}
+							<tr>
+								<td colspan="10" style="text-align: center">ไม่พบข้อมูล</td>
+							</tr>
+						{% endif %}
+						</tbody>
+					</table>
+					<div class="row" style="float: right">{{ knp_pagination_render(reportData) }}</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+        $(document).ready(function () {
+            $("#startDate").datepicker({dateFormat: 'dd-mm-yy'}).datepicker('setDate', 'today');
+            $("#endDate").datepicker({dateFormat: 'dd-mm-yy'});
+        });
+        var t1_month;
+        var t1_year;
+        $("#check1").change(function () {
+            $('filter_getMonth option[value=0]').attr('selected', 'selected');
+            if ($("#check1").prop("checked") === true) {
+                $("#filter_getMonth").show();
+                $("#filter_getYear").show();
+            } else {
+                $("#filter_getMonth").hide();
+                $("#filter_getYear").hide();
+                t1_month = '0' + (new Date().getMonth() + 1);
+                t1_year = new Date().getFullYear();
+            }
+        }).change();
+        $("#filter_getMonth").change(function () {
+            var selectedVal = $("#filter_getMonth option:selected").val();
+            t1_month = selectedVal;
+        });
+        $("#filter_getYear").change(function () {
+            var selectedVal2 = $("#filter_getYear option:selected").val();
+            t1_year = selectedVal2;
+        });
+
+        function link_href(status) {
+            $(".link").prop("href", '/report?date=' + t1_year + '-' + t1_month + '&status=' + status);
+        }
+	</script>
+{% endblock %}

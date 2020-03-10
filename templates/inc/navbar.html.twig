@@ -1,0 +1,80 @@
+<style>
+    label{
+        font-family: 'Prompt', sans-serif;
+    }
+
+    .dropdown-item:active {
+        background-color: #adb5bd !important;
+        border-color: #adb5bd !important;
+    }
+    .navbar-toggler-icon{
+        color: white !important;
+    }
+    .navbar-brand {
+        color: white !important;
+    }
+    .navbar-dark{
+        background-color: #643085 !important;
+    }
+    .dropdown-item:hover{
+        background-color: #6c757d;
+    }
+    .dropdown-item:focus{
+        background-color: #6c757d;
+    }
+
+</style>
+
+<nav class="navbar sticky-top navbar-expand-md navbar-dark">
+    <a class="navbar-brand" href="#"><label style="font-size: 20px">945 Agent Report</label></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#"></a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+
+{#            <li class="nav-item">#}
+{#                <a class="nav-link" href="{{ path('report') }}"><i class="fa fa-address-card"></i> <label>รายงานการขาย</label> </a>#}
+{#            </li>#}
+            {% if app.session.get('merType') == "afa" %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('dashboard_afa') }}"><i class="fa fa-address-card"></i> <label>Dashboard AFA</label> </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('dashboard') }}"><i class="fa fa-address-card"></i> <label>Dashboard</label> </a>
+            </li>
+            {% endif %}
+
+
+            <li class="nav-item  dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false"><i class="fa fa-table"></i><label> &nbsp;Commission</label>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right text-center da">
+                    <a class="dropdown-item" href="{{ path('commission') }}"><i class="fa fa-table"></i> <label>ค่าคอมฯที่โอนสำเร็จ</label></a>
+                    <a class="dropdown-item" href="{{ path('report_week') }}"><i class="fa fa-address-card"></i> <label>ค่าคอมฯที่รอโอน</label></a>
+                    <a class="dropdown-item" href="{{ path('list') }}"><i class="fa fa-book"></i> <label>รายการหักภาษี ณ ที่จ่าย</label><span class="sr-only">(current)</span></a>
+                </div>
+            </li>
+            <li class="nav-item active dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <label>ชื่อผู้ใช้:</label> {{ app.user.fname }}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right text-center da">
+                    <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i>
+                        ออกจากระบบ</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+

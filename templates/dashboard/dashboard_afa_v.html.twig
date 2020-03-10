@@ -1,0 +1,481 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Dashboard | 945 Agent Report{% endblock %}
+
+{% block body %}
+	<style>
+		/* Simple CSS3 Fade-in-down Animation */
+		.fadeInDown {
+			-webkit-animation-name: fadeInDown;
+			animation-name: fadeInDown;
+			-webkit-animation-duration: 1s;
+			animation-duration: 1s;
+			-webkit-animation-fill-mode: both;
+			animation-fill-mode: both;
+		}
+
+		@-webkit-keyframes fadeInDown {
+			0% {
+				opacity: 0;
+				-webkit-transform: translate3d(0, -100%, 0);
+				transform: translate3d(0, -100%, 0);
+			}
+			100% {
+				opacity: 1;
+				-webkit-transform: none;
+				transform: none;
+			}
+		}
+
+		@keyframes fadeInDown {
+			0% {
+				opacity: 0;
+				-webkit-transform: translate3d(0, -100%, 0);
+				transform: translate3d(0, -100%, 0);
+			}
+			100% {
+				opacity: 1;
+				-webkit-transform: none;
+				transform: none;
+			}
+		}
+
+		.hiddenRow {
+			padding: 0 !important;
+		}
+
+		/* Simple CSS3 Fade-in Animation */
+		@-webkit-keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		@-moz-keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		.centered {
+			margin-top: 5%;
+		}
+
+		.button {
+			background-color: #1c87c9;
+			border: none;
+			color: white;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		.center2 {
+			margin: auto;
+			width: 50%;
+			padding: 10px;
+		}
+
+	</style>
+	<div class="container-fluid fadeInDown centered">
+		<div class="row justify-content-center">
+			{% if status == 'pass' %}
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header" id="card-style"></div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-12" style="margin-top: 10px;">
+									<div class="panel panel-default">
+										<div class="panel-body">
+											<div class="row" style="padding-right: 50px; padding-left: 50px;">
+												<div class="col-12">
+													<fieldset class="col-md-12">
+														<div class="panel panel-default">
+															<div class="panel-body">
+																<table class="table table-bordered"
+																	   style="table-layout: fixed;">
+																	<thead>
+																	<tr>
+																		<th></th>
+																		<th></th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr>
+																		<td style="text-align: center;">
+																			<strong>{{ name.fname }}</strong>
+																		</td>
+																		<td style="text-align: center;">
+																			<strong>{{ name.phoneno }}</strong>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="text-align: center;" colspan="2">
+																			<strong>{{ dateTime.years }}
+																				ปี {{ dateTime.months }}
+																				เดือน {{ dateTime.days }} วัน</strong>
+																		</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-4">
+													<fieldset class="col-md-12">
+														<legend class="legendborder" style="text-align: center;"><b>SALES PERFORMANCE</b></legend>
+														<div class="panel panel-default">
+															<div class="panel-body">
+																<table class="table table-bordered"
+																       style="table-layout: fixed;">
+																	<thead>
+																	<tr>
+																		<th>All Time Sales Amount</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr>
+																		<td style="text-align: center;">{{ data_result.t6 | number_format(0, ',') }}</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+
+												<div class="col-4">
+													<fieldset class="col-md-12">
+														<legend class="legendborder" style="text-align: center;"><b>COMMISSION</b></legend>
+														<div class="panel panel-default">
+															<div class="panel-body">
+																<table class="table table-bordered">
+																	<thead>
+																	<tr>
+																		<th>All Time Commission (Estimated)</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr>
+																		<td style="text-align: center;">{{ data_result.t3 | number_format(0, ',') }}</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+
+												<div class="col-4">
+													<fieldset class="col-md-12">
+														<legend class="legendborder" style="text-align: center;"><b>BONUS</b></legend>
+														<div class="panel panel-default">
+															<div class="panel-body">
+																<table class="table table-bordered">
+																	<thead>
+																	<tr>
+																		<th>All Time Bonus</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr>
+																		<td style="text-align: center;">{{ data_result.t9 | number_format(0, ',') }}</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+
+											<div class="row">
+												<div class="col-4">
+													<fieldset class="col-md-12">
+														<div class="panel panel-default">
+															<div class="panel-body">
+																<table class="table table-bordered"
+																       style="table-layout: fixed;">
+																	<thead>
+																	<tr>
+																		<th>monthly</th>
+																		<th>daily</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr>
+																		<td style="text-align: center;">{{ data_result.t5 | number_format(0, ',') }}</td>
+																		<td style="text-align: center;">{{ data_result.t4 | number_format(0, ',') }}</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+
+												<div class="col-4">
+													<fieldset class="col-md-12">
+														<div class="panel panel-default">
+															<div class="panel-body">
+																<table class="table table-bordered"
+																       style="table-layout: fixed;">
+																	<thead>
+																	<tr>
+																		<th>monthly</th>
+																		<th>daily</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr>
+																		<td style="text-align: center;">{{ data_result.t2 | number_format(0, ',') }}</td>
+																		<td style="text-align: center;">{{ data_result.t1 | number_format(0, ',') }}</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+
+												<div class="col-4">
+													<fieldset class="col-md-12">
+														<div class="panel panel-default">
+															<div class="panel-body">
+																<table class="table table-bordered"
+																	   style="table-layout: fixed;">
+																	<thead>
+																	<tr>
+																		<th>monthly</th>
+																		<th>daily</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr>
+																		<td style="text-align: center;">{{ data_result.t8 | number_format(0, ',') }}</td>
+																		<td style="text-align: center;">{{ data_result.t7 | number_format(0, ',') }}</td>
+																	</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="card mt-2">
+						<div class="card-header" id="card-style"><i class="fa fa-address-card"></i> Hourly Performance
+						</div>
+						<div class="card-body">
+							<div id="linechart3" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+						</div>
+					</div>
+
+					<div class="card mt-2">
+						<div class="card-header" id="card-style"><i class="fa fa-address-card"></i> Performance Graph
+						</div>
+						<div class="card-body">
+							<div>
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'),'adminid' : app.request.get('adminid'), 'date' : 'twoMonth'}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2"><i
+												class="fa fa-clock-o"
+												aria-hidden="true"></i>
+										2 เดือน
+									</button>
+								</a>
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'),'adminid' : app.request.get('adminid'),'date' : 'oneMonth'}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2"><i
+												class="fa fa-clock-o"
+												aria-hidden="true"></i>
+										1 เดือน
+									</button>
+								</a>
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'),'adminid' : app.request.get('adminid'),'date' : 'fourteen'}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2"><i
+												class="fa fa-clock-o"
+												aria-hidden="true"></i>
+										2 สัปดาห์
+									</button>
+								</a>
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'),'adminid' : app.request.get('adminid'),'date' : 'seven'}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2"><i
+												class="fa fa-clock-o"
+												aria-hidden="true"></i>
+										1 สัปดาห์
+									</button>
+								</a>
+							</div>
+
+							<div class="alert alert-info">
+								วันที่ <strong>{{ app.session.get('thisDate_get') | date('d-m-Y') }}</strong> ถึง
+								<strong>{{ app.session.get('lastDate_get') | date('d-m-Y') }}</strong>.
+							</div>
+						</div>
+						<div class="card-body">
+							<div id="linechart" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+						</div>
+
+						<div class="card-body">
+							<div id="linechart1" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+						</div>
+
+						<div class="card-body">
+							<div id="linechart2" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+						</div>
+					</div>
+
+					<div class="card mt-2">
+						<div class="card-header" id="card-style"><i class="fa fa-address-card"></i> Weekly Product Sales
+						</div>
+						<div class="card-body">
+							<div>
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'),'adminid' : app.request.get('adminid'),'date' : 'thisWeek'}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2"><i
+												class="fa fa-clock-o"
+												aria-hidden="true"></i>
+										&nbsp;สัปดาห์นี้
+									</button>
+								</a>
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'),'adminid' : app.request.get('adminid'),'date' : 'lastWeek'}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2"><i
+												class="fa fa-clock-o"
+												aria-hidden="true"></i>&nbsp;1
+										สัปดาห์ที่แล้ว
+									</button>
+								</a>
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'),'adminid' : app.request.get('adminid'),'date' : '2Week'}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2"><i
+												class="fa fa-clock-o"
+												aria-hidden="true"></i>
+										2 สัปดาห์ที่แล้ว
+									</button>
+								</a>
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'), 'adminid' : app.request.get('adminid'),'date' : '3Week'}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2"><i
+												class="fa fa-clock-o"
+												aria-hidden="true"></i>
+										3 สัปดาห์ที่แล้ว
+									</button>
+								</a>
+							</div>
+							<div class="alert alert-info">
+								วันที่ <strong>{{ app.session.get('startWeek_get') | date('d-m-Y') }}</strong> ถึง
+								<strong>{{ app.session.get('endWeek_get') | date('d-m-Y') }}</strong>.
+							</div>
+						</div>
+						<div class="card-body">
+							<div>
+								<table class="table table-bordered table-hover table-striped" id="mytable">
+									<thead>
+									<tr>
+										<th>IMG</th>
+										<th>PRODUCT</th>
+										<th>Total</th>
+										<th>M</th>
+										<th>Tu</th>
+										<th>W</th>
+										<th>Th</th>
+										<th>F</th>
+										<th>Sa</th>
+										<th>Su</th>
+									</tr>
+									</thead>
+									<tbody>
+									{% if data is not empty %}
+										{% for k,v in data %}
+											<tr>
+												<td>
+													<img src="{{ v.path }}">
+												</td>
+												<td>{{ v.name }}</td>
+												<td>{{ v.total }}</td>
+												<td>{{ v.week.Monday }}</td>
+												<td>{{ v.week.Tuesday }}</td>
+												<td>{{ v.week.Wednesday }}</td>
+												<td>{{ v.week.Thursday }}</td>
+												<td>{{ v.week.Friday }}</td>
+												<td>{{ v.week.Saturday }}</td>
+												<td>{{ v.week.Sunday }}</td>
+											</tr>
+										{% endfor %}
+									{% else %}
+										<tr>
+											<td colspan="10" style="text-align: center">ไม่พบข้อมูล</td>
+										</tr>
+									{% endif %}
+									</tbody>
+									<tfoot>
+									</tfoot>
+								</table>
+								{% if data is not empty %}
+									{{ knp_pagination_render(data) }}
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+				</div>
+			{% else %}
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header" id="card-style"></div>
+						<div class="card-body">
+							<div class="row" style="justify-content: center">
+								<strong>ไม่พบข้อมูล</strong>
+							</div>
+							<div class="row" style="justify-content: center">
+								<a href="{{ path('dashboard_afa_get', {'takeorderby' : app.request.get('takeorderby'), 'adminid' : app.request.get('adminid')}) }}">
+									<button type="button" class="btn btn-outline-secondary mb-2">
+										กลับไปยังหน้าเดิม
+									</button>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock %}
+	{% block javascripts %}
+		{{ parent() }}
+		{% if status == 'pass' %}
+			<script src="{{ asset('js/highcharts.js') }}"></script>
+			<script src="{{ asset('js/modules/exporting.js') }}"></script>
+			<script type="text/javascript">
+				{{ chart(chart) }}
+				{{ chart(chart1) }}
+				{{ chart(chart2) }}
+				{{ chart(chart3) }}
+			</script>
+		{% endif %}
+
+	{% endblock %}

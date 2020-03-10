@@ -1,0 +1,661 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard | 945 Agent Report{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/loading-bar.css') }}" rel="stylesheet" type="text/css"/>
+
+{% endblock %}
+{% block body %}
+    <style>
+        .table-responsive {
+            display: table;
+        }
+
+        /* Simple CSS3 Fade-in-down Animation */
+        .fadeInDown {
+            -webkit-animation-name: fadeInDown;
+            animation-name: fadeInDown;
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+        @-webkit-keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: none;
+                transform: none;
+            }
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: none;
+                transform: none;
+            }
+        }
+
+        .hiddenRow {
+            padding: 0 !important;
+        }
+
+        /* Simple CSS3 Fade-in Animation */
+        @-webkit-keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .mobile-ter-card-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .mobile-ter-card {
+            margin: 20px auto;
+            background-color: #fff;
+            width: 90%;
+            padding: 20px;
+            border-radius: 10px;
+            height: auto;
+            background-image: url("https://carrd.co/assets/images/bg.svg"), linear-gradient(160deg, #933fe3 25%, #6a3093 75%);
+            background-size: cover, cover;
+            background-position: top, center;
+            background-repeat: no-repeat, no-repeat;
+            box-shadow: 0 0 15px 5px rgb(167, 167, 167);
+        }
+
+        .mobile-ter-card hr {
+            margin: 15px auto;
+        }
+
+        .mobile-ter-card .mobile-ter-total,
+        .mobile-ter-card .mobile-ter-month,
+        .mobile-ter-card .mobile-ter-today {
+            color: #fff;
+            display: grid;
+            grid-template-columns: auto auto;
+        }
+
+        .mobile-ter-card .mobile-ter-total .left,
+        .mobile-ter-card .mobile-ter-month .left,
+        .mobile-ter-card .mobile-ter-today .left {
+            text-align: left;
+            font-size: 22px;
+            text-transform: uppercase;
+            opacity: .3;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        .mobile-ter-card .mobile-ter-total .right,
+        .mobile-ter-card .mobile-ter-month .right,
+        .mobile-ter-card .mobile-ter-today .right {
+            text-align: right;
+            font-size: 22px;
+        }
+
+        @-moz-keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .centered {
+            margin-top: 5%;
+        }
+
+        .button {
+            background-color: #1c87c9;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: auto auto;
+            width: 350px;
+            margin: 30px auto;
+        }
+
+        .item .image {
+            text-align: center;
+        }
+
+        .item .image img {
+            width: 80px;
+            margin-bottom: 10px;
+        }
+
+        .item .detail {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .item .detail p {
+            font-size: 12px;
+            margin: 15px 0 0 0;
+        }
+
+        .line {
+            background-color: #dfdfdf;
+            height: 2px;
+            margin: 5px 0;
+            padding: 0;
+        }
+
+        .container_ter {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        @media screen and (min-width: 0px) and (max-width: 800px) {
+
+            .container_ter {
+                display: grid;
+                grid-template-columns: auto;
+            }
+
+            .mobile-ter-card-container {
+                grid-template-columns: 1fr;
+            }
+            .mobile-ter-card{
+                width: 100%;
+            }
+
+            .item {
+                display: grid;
+                grid-template-columns: auto auto;
+                height: 100px;
+                width: auto;
+            }
+
+            .item .image img {
+                height: 85px;
+            }
+
+            .detail {
+                margin: 0;
+                padding: 0;
+            }
+
+        }
+
+
+
+        @media screen and (min-width: 800px) and (max-width: 1400px) {
+
+            /*.container_ter {*/
+            /*    display: grid;*/
+            /*    grid-template-columns: auto auto;*/
+            /*}*/
+            .container_ter {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .item {
+                display: grid;
+                grid-template-columns: auto auto;
+                /* margin: 30px auto; */
+                /*height: 180px;*/
+                width: auto;
+            }
+
+            .item .image img {
+                width: 80px;
+            }
+
+            .detail {
+                margin: 0;
+                padding: 0;
+            }
+
+
+        }
+
+    </style>
+
+    <div class="container-fluid fadeInDown centered" style="margin-top: 30px; padding-left: 0; padding-right: 0">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-header" id="card-style"><i class="fa fa-star" aria-hidden="true"></i> 945 Mission</div>
+                <div class="card-body">
+                    <div class="container_ter">
+                        {% for t in result %}
+                            <div class="item">
+                                <div class="image">
+                                    {% if t.pct < 100 %}
+                                        <img src="{{ asset('img/no-success.png') }}"/>
+                                    {% else %}
+                                        <img src="{{ asset('img/success.png') }}"/>
+                                    {% endif %}
+                                </div>
+                                <div class="detail">
+                                    <label>{{ t.mission_name }}</label>
+                                    {% if t.pct >= 0 and t.pct < 50 %}
+                                        <div style="width:100% ; height: 30px; font-size:10px; color:#000 ; font-weight: bold"
+                                             data-stroke="data:ldbar/res,gradient(0,3,#fff222,#ffa800)"
+                                             data-stroke-trail="gray" data-stroke-trail-width="1.5" class="ldBar"
+                                             data-value="{{ t.pct }}" data-transition-in="true">
+                                        </div>
+                                    {% elseif t.pct >= 50 and t.pct < 100 %}
+                                        <div style="width:100% ; height: 30px; font-size:10px; color:#000 ; font-weight: bold"
+                                             data-stroke="data:ldbar/res,gradient(0,5,#11998e,#38ef7d)"
+                                             data-stroke-trail="gray" data-stroke-trail-width="1.5" class="ldBar"
+                                             data-value="{{ t.pct }}" data-transition-in="true">
+                                        </div>
+                                    {% else %}
+                                        <div style="width:100% ; height: 30px; font-size:10px; color:#000 ; font-weight: bold"
+                                             data-stroke="data:ldbar/res,gradient(0,5,#f80c12,#ff9933,#69d025,#11aabb,#442299)"
+                                             data-stroke-trail="gray" data-stroke-trail-width="1.5" class="ldBar"
+                                             data-value="{{ t.pct }}" data-transition-in="true">
+                                        </div>
+                                    {% endif %}
+
+
+                                    <p>{{ t.raw_score }}/{{ t.mission_full_score }}</p>
+                                    <div class="line"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12">
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-header" id="card-style"><i class="fa fa-user" aria-hidden="true"></i> Profile</div>
+                <div class="card-body">
+                    <div class="mobile-ter-card-container">
+                        <div class="mobile-ter-card">
+                            <div class="mobile-ter-total">
+                                <div class="left">
+                                    <label>year</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ dateTime.years }}</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mobile-ter-month">
+                                <div class="left">
+                                    <label>month</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ dateTime.months }}</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mobile-ter-today">
+                                <div class="left">
+                                    <label>day</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ dateTime.days }}</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="mobile-ter-card">
+                            <div class="mobile-ter-total">
+                                <div class="left">
+                                    <label>Sales</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ data_result.t6 | number_format(0, ',') }}</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mobile-ter-month">
+                                <div class="left">
+                                    <label>monthly</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ data_result.t5 | number_format(0, ',') }}</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mobile-ter-today">
+                                <div class="left">
+                                    <label>daily</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ data_result.t4 | number_format(0, ',') }}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mobile-ter-card">
+                            <div class="mobile-ter-total">
+                                <div class="left">
+                                    <label>com</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ data_result.t3 | number_format(0, ',') }}</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mobile-ter-month">
+                                <div class="left">
+                                    <label>monthly</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ data_result.t2 | number_format(0, ',') }}</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mobile-ter-today">
+                                <div class="left">
+                                    <label>daily</label>
+                                </div>
+                                <div class="right">
+                                    <label>{{ data_result.t1 | number_format(0, ',') }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#                    <div class="row" style="text-align: center;">#}
+                    {#                        <div class="col-lg-4 col-md-4 col-sm-4">#}
+                    {#                        </div>#}
+                    {#                        <div class="col-lg-4 col-md-4 col-sm-4" style="#}
+                    {#    margin-bottom: 20px;#}
+                    {#">#}
+                    {#                            <b style="font-size: 26px">{{ dateTime.years }}#}
+                    {#                                ปี {{ dateTime.months }}#}
+                    {#                                เดือน {{ dateTime.days }} วัน</b>#}
+                    {#                        </div>#}
+
+                    {#                        <div class="col-lg-4 col-md-4 col-sm-4">#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+
+                    {#                    <div class="row">#}
+                    {#                        <div class="col-lg-6 col-md-6 col-sm-6">#}
+                    {#                            <div class="row">#}
+                    {#                                <div class="col-lg-12 col-md-12 col-sm-12">#}
+                    {#                                    <div class="row" style="margin-left: 0px;margin-right: 0px;">#}
+
+                    {#                                        <div class="col-lg-1 col-md-1 col-sm-1"></div>#}
+
+                    {#                                        <div class="col-lg-10 col-md-10 col-sm-10"#}
+                    {#                                             style="text-align: center; background-color: violet;border-radius: 15px;">#}
+                    {#                                            <legend class="legendborder"><b>SALES PERFORMANCE</b></legend>#}
+                    {#                                            <b style="font-size: 22px">{{ data_result.t6 | number_format(0, ',') }}</b>#}
+                    {#                                            <p>All Time Sales Amount</p>#}
+                    {#                                        </div>#}
+                    {#                                        <div class="col-lg-1 col-md-1 col-sm-1"></div>#}
+                    {#                                    </div>#}
+                    {#                                </div>#}
+                    {#                            </div>#}
+
+                    {#                            <div class="row">#}
+                    {#                                <div class="col-lg-1 col-md-1"></div>#}
+                    {#                                <div class="col-lg-5 col-md-5">#}
+                    {#                                    <div class="card" style=" margin-top: 20px;margin-bottom: 20px;">#}
+                    {#                                        <div class="card-header"#}
+                    {#                                             style="text-align: center; background-color: #a72bd0; color: white"><i#}
+                    {#                                                    class="fa fa-address-card"></i> Monthly#}
+                    {#                                        </div>#}
+                    {#                                        <div class="card-body" style="text-align: center;">#}
+                    {#                                            <b style="font-size: 18px;">{{ data_result.t5 | number_format(0, ',') }}</b>#}
+                    {#                                        </div>#}
+                    {#                                    </div>#}
+                    {#                                </div>#}
+                    {#                                <div class="col-lg-5 col-md-5">#}
+                    {#                                    <div class="card" style="margin-top: 20px;margin-bottom: 20px;">#}
+                    {#                                        <div class="card-header"#}
+                    {#                                             style="text-align: center;background-color: #a72bd0; color: white">#}
+                    {#                                            <i class="fa fa-address-card"></i> Daily#}
+                    {#                                        </div>#}
+                    {#                                        <div class="card-body" style="text-align: center;">#}
+                    {#                                            <b style="font-size: 18px;">{{ data_result.t4 | number_format(0, ',') }}</b>#}
+                    {#                                        </div>#}
+                    {#                                    </div>#}
+                    {#                                </div>#}
+                    {#                                <div class="col-lg-1 col-md-1"></div>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+
+
+                    {#                        <div class="col-lg-6 col-md-6 col-sm-6">#}
+                    {#                            <div class="row">#}
+                    {#                                <div class="col-lg-12 col-md-12 col-sm-12">#}
+                    {#                                    <div class="row" style="margin-left: 0px;margin-right: 0px;">#}
+                    {#                                        <div class="col-lg-1 col-md-1 col-sm-1"></div>#}
+                    {#                                        <div class="col-lg-10 col-md-10 col-sm-10"#}
+                    {#                                             style="text-align: center; background-color: #ffb5ff;border-radius: 15px;">#}
+                    {#                                            <legend class="legendborder"><b>COMMISSION</b></legend>#}
+                    {#                                            <b style="font-size: 22px">{{ data_result.t3 | number_format(0, ',') }}</b>#}
+                    {#                                            <p>All Time Commission (Estimated)</p>#}
+                    {#                                        </div>#}
+                    {#                                        <div class="col-lg-1 col-md-1 col-sm-1"></div>#}
+                    {#                                    </div>#}
+                    {#                                </div>#}
+                    {#                            </div>#}
+
+                    {#                            <div class="row">#}
+                    {#                                <div class="col-lg-1 col-md-1"></div>#}
+                    {#                                <div class="col-lg-5 col-md-5">#}
+                    {#                                    <div class="card" style=" margin-top: 20px;margin-bottom: 20px;">#}
+                    {#                                        <div class="card-header"#}
+                    {#                                             style="text-align: center; background-color: #b300ee; color: white"><i#}
+                    {#                                                    class="fa fa-address-card"></i> Monthly#}
+                    {#                                        </div>#}
+                    {#                                        <div class="card-body" style="text-align: center;">#}
+                    {#                                            <b style="font-size: 18px;">{{ data_result.t2 | number_format(0, ',') }}</b>#}
+                    {#                                        </div>#}
+                    {#                                    </div>#}
+                    {#                                </div>#}
+                    {#                                <div class="col-lg-5 col-md-5">#}
+                    {#                                    <div class="card" style="margin-top: 20px;margin-bottom: 20px;">#}
+                    {#                                        <div class="card-header"#}
+                    {#                                             style="text-align: center;background-color: #b300ee; color: white">#}
+                    {#                                            <i class="fa fa-address-card"></i> Daily#}
+                    {#                                        </div>#}
+                    {#                                        <div class="card-body" style="text-align: center;">#}
+                    {#                                            <b style="font-size: 18px;">{{ data_result.t1 | number_format(0, ',') }}</b>#}
+                    {#                                        </div>#}
+                    {#                                    </div>#}
+                    {#                                </div>#}
+                    {#                                <div class="col-lg-1 col-md-1"></div>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12">
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-header" id="card-style"><i class="fa fa-address-card"></i> Hourly Performance</div>
+                <div class="card-body">
+                    <div id="linechart3" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12">
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-header" id="card-style"><i class="fa fa-address-card"></i> Performance Graph</div>
+                <div class="card-body">
+                    <div>
+                        <a href="{{ path('dashboard', {'date' : 'twoMonth'}) }}">
+                            <button type="button" class="btn btn-outline-secondary mb-2"><i class="fa fa-clock-o"
+                                                                                            aria-hidden="true"></i>
+                                2 เดือน
+                            </button>
+                        </a>
+                        <a href="{{ path('dashboard', {'date' : 'oneMonth'}) }}">
+                            <button type="button" class="btn btn-outline-secondary mb-2"><i class="fa fa-clock-o"
+                                                                                            aria-hidden="true"></i>
+                                1 เดือน
+                            </button>
+                        </a>
+                        <a href="{{ path('dashboard', {'date' : 'fourteen'}) }}">
+                            <button type="button" class="btn btn-outline-secondary mb-2"><i class="fa fa-clock-o"
+                                                                                            aria-hidden="true"></i>
+                                2 สัปดาห์
+                            </button>
+                        </a>
+                        <a href="{{ path('dashboard', {'date' : 'seven'}) }}">
+                            <button type="button" class="btn btn-outline-secondary mb-2"><i class="fa fa-clock-o"
+                                                                                            aria-hidden="true"></i>
+                                1 สัปดาห์
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="alert alert-info">
+                        วันที่ <strong>{{ app.session.get('thisDate') | date('d-m-Y') }}</strong> ถึง
+                        <strong>{{ app.session.get('lastDate') | date('d-m-Y') }}</strong>.
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="linechart"></div>
+                </div>
+
+                <div class="card-body">
+                    <div id="linechart2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12">
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-header" id="card-style"><i class="fa fa-address-card"></i> Weekly Product Sales</div>
+                <div class="card-body">
+                    <div>
+                        <a href="{{ path('dashboard', {'date' : 'thisWeek'}) }}">
+                            <button type="button" class="btn btn-outline-secondary mb-2"><i class="fa fa-clock-o"
+                                                                                            aria-hidden="true"></i>
+                                &nbsp;สัปดาห์นี้
+                            </button>
+                        </a>
+                        <a href="{{ path('dashboard', {'date' : 'lastWeek'}) }}">
+                            <button type="button" class="btn btn-outline-secondary mb-2"><i class="fa fa-clock-o"
+                                                                                            aria-hidden="true"></i>&nbsp;1
+                                สัปดาห์ที่แล้ว
+                            </button>
+                        </a>
+                        <a href="{{ path('dashboard', {'date' : '2Week'}) }}">
+                            <button type="button" class="btn btn-outline-secondary mb-2"><i class="fa fa-clock-o"
+                                                                                            aria-hidden="true"></i>
+                                2 สัปดาห์ที่แล้ว
+                            </button>
+                        </a>
+                        <a href="{{ path('dashboard', {'date' : '3Week'}) }}">
+                            <button type="button" class="btn btn-outline-secondary mb-2"><i class="fa fa-clock-o"
+                                                                                            aria-hidden="true"></i>
+                                3 สัปดาห์ที่แล้ว
+                            </button>
+                        </a>
+                    </div>
+                    <div class="alert alert-info">
+                        วันที่ <strong>{{ app.session.get('startWeek') | date('d-m-Y') }}</strong> ถึง
+                        <strong>{{ app.session.get('endWeek') | date('d-m-Y') }}</strong>.
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive-md">
+                        <table class="table  table-striped  table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>IMG</th>
+                                <th>PRODUCT</th>
+                                <th>Total</th>
+                                <th>M</th>
+                                <th>Tu</th>
+                                <th>W</th>
+                                <th>Th</th>
+                                <th>F</th>
+                                <th>Sa</th>
+                                <th>Su</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if data is not empty %}
+                                {% for k,v in data %}
+                                    <tr>
+                                        <td>
+                                            <img src="{{ v.path }}">
+                                        </td>
+                                        <td>{{ v.name }}</td>
+                                        <td>{{ v.total }}</td>
+                                        <td>{{ v.week.Monday }}</td>
+                                        <td>{{ v.week.Tuesday }}</td>
+                                        <td>{{ v.week.Wednesday }}</td>
+                                        <td>{{ v.week.Thursday }}</td>
+                                        <td>{{ v.week.Friday }}</td>
+                                        <td>{{ v.week.Saturday }}</td>
+                                        <td>{{ v.week.Sunday }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="10" style="text-align: center">ไม่พบข้อมูล</td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                        {% if data is not empty %}
+                            {{ knp_pagination_render(data) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+	{% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('js/loading-bar.js') }}"></script>
+        <script src="{{ asset('js/highcharts.js') }}"></script>
+        <script src="{{ asset('js/loading-bar.js') }}"></script>
+        <script src="{{ asset('js/modules/exporting.js') }}"></script>
+        <script type="text/javascript">
+            {{ chart(chart) }}
+            {{ chart(chart2) }}
+            {{ chart(chart3) }}
+        </script>
+
+    {% endblock %}

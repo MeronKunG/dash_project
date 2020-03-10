@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+{#	<meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>{% block title %}Welcome!{% endblock %}</title>
+	{% block stylesheets %}
+		<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+		<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
+		<link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css"/>
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<link rel="icon" href="{{asset('upload-icon.ico')}}">
+        <link href="https://fonts.googleapis.com/css?family=Prompt&display=swap" rel="stylesheet">
+		<script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+				integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+				crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+				integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+				crossorigin="anonymous"></script>
+		<style>
+			body{
+				font-family: 'Prompt', sans-serif;
+
+			}
+			th{
+				text-align: center;
+				padding-bottom: 5px !important;
+				padding-top: 5px !important;
+			}
+			thead{
+				background-color: #643085;
+				color: #FFFFFF;
+			}
+			input:focus{
+				border-color:#7c1da2 !important;
+				box-shadow: 0 0 0 0.2rem rgba(178, 136, 216, 0.25) !important;
+			}
+
+			select:focus{
+				border-color:#7c1da2 !important;
+				box-shadow: 0 0 0 0.2rem rgba(178, 136, 216, 0.25) !important;
+			}
+			.text-header{
+				font-size: 20px;
+				text-align: center;
+				font-weight: bold;
+			}
+			.btn-search{
+				border-color: #6f42c1 !important;
+				color: #6f42c1 !important;
+			}
+			.btn-search:hover{
+				background-color: #6f42c1;
+				border-color: #6f42c1 !important;
+				color: white !important;
+			}
+			.btn-search:active{
+				background-color: #6f42c1 !important;
+				border-color: #6f42c1 !important;
+				color: white !important;
+				box-shadow: 0 0 0 0.2rem rgba(189, 140, 220, 0.5);
+			}
+			.btn-search:focus{
+				background-color: #6f42c1;
+				border-color: #6f42c1 !important;
+				color: white !important;
+				box-shadow: 0 0 0 0.2rem rgba(189, 140, 220, 0.5);
+			}
+			.page-item.active .page-link{
+				background-color: #6f42c1;
+				border-color: #6f42c1;
+				color: #FFFFFF !important;
+			}
+			.page-link{
+				color: #6f42c1 !important;
+			}
+			.alert-info{
+				color:#7d56b1;
+				background-color:#f8f3ff;
+				border-color:#cc98fb;
+			}
+			.bodyinin{
+				background-color: 	snow;
+			}
+
+
+		</style>
+
+	{% endblock %}
+</head>
+<body>
+
+{{ include('inc/navbar.html.twig') }}
+
+<div class="container-fluid">
+	{% block body %}{% endblock %}
+</div>
+
+{% block javascripts %}
+
+{% endblock %}
+</body>
+</html>

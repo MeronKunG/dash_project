@@ -1,0 +1,238 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}รายการรอโอน/รายการที่สำเร็จในสัปดาห์นี้ | 945 Agent Report{% endblock %}
+
+{% block body %}
+    <style>
+        /* Simple CSS3 Fade-in-down Animation */
+        .fadeInDown {
+            -webkit-animation-name: fadeInDown;
+            animation-name: fadeInDown;
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+        @-webkit-keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: none;
+                transform: none;
+            }
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: none;
+                transform: none;
+            }
+        }
+
+        .hiddenRow {
+            padding: 0 !important;
+        }
+
+        /* Simple CSS3 Fade-in Animation */
+        @-webkit-keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @-moz-keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .centered {
+            margin-top: 5%;
+        }
+
+        .button {
+            background-color: #1c87c9;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .bg-white {
+            background-color: #D8BFD8 !important;
+        }
+
+        .card-head {
+            background-color: #7d56b1;
+            color: #FFFFFF;
+        }
+
+        .bodyhead {
+            background-color: #E6E6FA;
+        }
+
+
+    </style>
+    <div class="container-fluid fadeInDown centered">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card-deck" style="margin-bottom: 10px;">
+
+                    <div class="card card-radius" style="text-align: center">
+                        <div class="card-header card-head">
+                            <b style="font-size: 18px">ค่าคอมทั้งหมด</b>
+                        </div>
+                        <div class="card-body bodyhead">
+                            <strong style="font-size: 16px">{{ (total.com) | number_format(2, '.', ',') }}</strong>
+                        </div>
+                    </div>
+
+
+                    <div class="card card-radius" style="text-align: center">
+                        <div class="card-header card-head">
+                            <b style="font-size: 18px">ส่วนลดทั้งหมด</b>
+                        </div>
+                        <div class="card-body bodyhead">
+                            <strong style="font-size: 16px">{{ (total.discount) | number_format(2, '.', ',') }}</strong>
+                        </div>
+                    </div>
+
+
+                    <div class="card card-radius" style="text-align: center">
+                        <div class="card-header card-head">
+                            <b style="font-size: 18px">ยอดโอน</b>
+                        </div>
+                        <div class="card-body bodyhead">
+                            <strong style="font-size: 16px">{{ (total.transfer) | number_format(2, '.', ',') }}</strong>
+                        </div>
+                    </div>
+
+
+                </div>
+                {#                <div class="alert alert-primary">#}
+                {#                ค่าคอมโดยรวมทั้งหมด <strong>{{ total }}</strong>#}
+                {#            </div>#}
+                <p class="text-header" style="margin-top: 20px;"><i class="fa fa-address-card"></i> &nbsp;รายการที่สำเร็จในสัปดาห์นี้
+                    (ผลลัพธ์ทั้งหมด
+                    <b>{{ reportData.getTotalItemCount }}</b> รายการ)</p>
+                {% for label, flashes in app.session.flashbag.all %}
+                    {% if ( label == 'error' ) %}
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <div class="text-center">
+                                <p>{{ flashes[0] }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="table-responsive-md">
+                    <table class="table  table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>INVOICE</th>
+                            <th>ส่งสำเร็จ</th>
+                            <th>ค่าคอม</th>
+                            {% if app.session.get("merType") == "afa" %}
+                                <th>โบนัส</th>
+                            {% endif %}
+                            <th>ส่วนลด</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if reportData is not empty %}
+                            {% for k, report in reportData %}
+                                <tr data-toggle="collapse" data-target="#{{ k }}"
+                                    class="accordion-toggle">
+                                    <td style="text-align: center">{{ report.paymentInvoice }}</td>
+                                    <td style="text-align: center">{{ report.paymentdate | date('d-m-Y') }}</td>
+                                    <td style="text-align: right">{{ report.com_result | number_format(2, '.', ',') }}</td>
+                                    {% if app.session.get("merType") == "afa" %}
+                                        <td style="text-align: right">{{ report.afaCommissionBonus | number_format(2, '.', ',') }}</td>
+                                    {% endif %}
+                                    <td style="text-align: right">{{ report.paymentDiscount | number_format(2, '.', ',') }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="10" class="hiddenRow">
+                                        <div class="accordian-body collapse" id="{{ k }}">
+                                            {% if app.session.get("merType") == "afa" %}
+                                                <div class="alert alert-info"
+                                                     style="margin-top: 20px;margin-left: 15px; margin-right: 15px;"
+                                                     role="alert">
+                                                    ชื่อสินค้า : <b>{{ report.productname }}</b><br>จำนวน :
+                                                    <b>{{ report.productorder }}</b><br>ค่า COM :
+                                                    <b>{{ report.afaCommissionValue | number_format(2, '.', ',') }}</b><br>ค่า
+                                                    โบนัส :
+                                                    <b>{{ report.afaCommissionBonus | number_format(2, '.', ',') }}</b><br>รวม
+                                                    :
+                                                    <b>{{ report.result | number_format(2, '.', ',') }}
+                                                    </b>
+                                                </div>
+                                            {% else %}
+                                                <div class="alert alert-info"
+                                                     style="margin-top: 20px;margin-left: 15px; margin-right: 15px;"
+                                                     role="alert">
+                                                    ชื่อสินค้า : <b>{{ report.productname }}</b><br>จำนวน :
+                                                    <b>{{ report.productorder }}</b><br>ค่า COM :
+                                                    <b>{{ report.productCommission | number_format(2, '.', ',') }}</b><br>รวม
+                                                    :
+                                                    <b>{{ report.result | number_format(2, '.', ',') }}
+                                                    </b>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                {% if app.session.get("merType") == "afa" %}
+                                    <td colspan="5" style="text-align: center">ไม่พบข้อมูล</td>
+                                {% else %}
+                                    <td colspan="4" style="text-align: center">ไม่พบข้อมูล</td>
+                                {% endif %}
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                    {{ knp_pagination_render(reportData) }}
+                    <p><strong style="color: red;">* ยอดรอโอนยังไม่รวมการปรับราคาสินค้า และรายการภาษี ณ ที่จ่าย</strong>
+                    </p>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

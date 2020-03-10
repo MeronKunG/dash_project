@@ -1,0 +1,382 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}รายการ Commission | 945 Agent Report{% endblock %}
+
+{% block body %}
+    <style>
+        /* Simple CSS3 Fade-in-down Animation */
+        .fadeInDown {
+            -webkit-animation-name: fadeInDown;
+            animation-name: fadeInDown;
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+        @-webkit-keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: none;
+                transform: none;
+            }
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: none;
+                transform: none;
+            }
+        }
+
+        /* Simple CSS3 Fade-in Animation */
+        @-webkit-keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @-moz-keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .centered {
+            margin-top: 5%;
+        }
+
+        .link2:hover {
+            background-color: #E6E6FA;
+            font-weight: bold;
+
+        }
+
+        a:hover {
+            color: #FFFFFF !important;
+        }
+
+        .button {
+            background-color: #1c87c9;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        #card-style {
+            background-color: snow;
+            color: black;
+            font-size: 20px;
+        }
+
+        .link-two {
+            display: none;
+        }
+
+        .icon-show {
+            display: none;
+        }
+
+        @media screen and (max-width: 565px) and (min-width: 300px) {
+            .column-hide {
+                display: none;
+            }
+
+            .icon-show {
+                display: block;
+            }
+
+            .link-one {
+                display: none;
+            }
+
+            .link-two {
+                display: inline-block;
+                background-color: #9370DB;
+                border-color: #6f42c1;
+                width: 50px;
+                text-align: center !important;
+            }
+
+            .link-two:active {
+                background-color: #9370DB !important;
+            }
+
+            .link-two:hover {
+                background-color: #9370DB !important;
+            }
+
+            .link-two:focus {
+                border-color: #6f42c1 !important;
+                box-shadow: 0 0 0 0.2rem rgba(194, 14, 226, 0.5);
+            }
+        }
+    </style>
+
+    <div class="container-fluid fadeInDown centered">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-12">
+                {#				// Stage 1#}
+                {% if commissionData is not empty %}
+                    <p class="text-header"><i class="fa fa-table"></i> รายการ Commission
+                        (ผลลัพธ์ทั้งหมด
+                        <b>{{ commissionData.getTotalItemCount }}</b> รายการ)</p>
+                    <div class="table-responsive">
+                        <table class="table  table-striped  table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th><label class="column-hide" style="margin-bottom: 0px;">วันที่โอนสำเร็จ</label><i
+                                            class="fa fa-calendar fa-lg icon-show" aria-hidden="true"></i></th>
+                                <th class="column-hide" style="margin-bottom: 0px;">ยอดก่อนหักภาษี</th>
+                                <th class="column-hide">ภาษี ณ ที่จ่าย</th>
+                                <th><label class="column-hide" style="margin-bottom: 0px;">ยอดโอน</label><i
+                                            class="fa fa-money fa-lg  icon-show" aria-hidden="true"></i></th>
+{#                                <th class="column-hide">REF</th>#}
+                                <th><label class="column-hide" style="margin-bottom: 0px;">รายละเอียด</label><i
+                                            class="fa fa-file-text-o fa-lg  icon-show" aria-hidden="true"></i></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for commission in commissionData %}
+                                <tr>
+                                    {% if commission.tfd != null %}
+                                        <td style="text-align: center;">{{ commission.tfd | date('d-m-Y') }}</td>
+                                    {% else %}
+                                        <td style="text-align: center;">-</td>
+                                    {% endif %}
+                                    <td class="column-hide"
+                                        style="text-align: right;">{{ (commission.transferAmount) | number_format(2, '.', ',') }}</td>
+                                    <td class="column-hide"
+                                        style="text-align: right;">{{ (commission.withholdingTax) | number_format(2, '.', ',') }}</td>
+                                    <td style="text-align: right;">{{ (commission.finalTransferAmount) | number_format(2, '.', ',') }}</td>
+{#                                    {% if commission.ref2 != null %}#}
+{#                                        <td class="column-hide" style="text-align: center;">{{ commission.ref2 }}</td>#}
+{#                                    {% else %}#}
+{#                                        <td class="column-hide" style="text-align: center;">-</td>#}
+{#                                    {% endif %}#}
+                                    <td class='link2' style="text-align: center;">
+                                        <a class="link-one" style="color: #6f42c1 !important;"
+                                           href="{{ path('commission', {'comref': commission.initialRef }) }}">{{ commission.initialRef }}</a>
+                                        <a href="{{ path('commission', {'comref': commission.initialRef }) }}"
+                                           class="btn btn-primary btn-sm link-two">
+                                            Click
+                                        </a>
+
+                                    </td>
+                                </tr>
+                                <input type="hidden" name="comref" value="{{ commission.initialRef }}">
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ knp_pagination_render(commissionData) }}
+                    </div>
+
+
+                {% elseif commissionData is empty and commissionData2 is empty %}
+                    <div class="card">
+                        <div class="card-header" id="card-style"><i class="fa fa-table"></i> รายงาน Commission
+                            (ผลลัพธ์ทั้งหมด
+                            <b>{{ commissionData.getTotalItemCount }}</b> รายการ)
+                        </div>
+                        <div class="card-body">
+                            <div style="text-align: center">
+                                ไม่พบข้อมูล
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {#				//End Stage 1#}
+                {#				//stage 2#}
+                {% if commissionData2 is not empty %}
+                {% if app.request.query.get("comref") and not app.request.query.get("check") %}
+                    <a href="{{ path('commission') }}">
+                        <button type="button" class="btn btn-outline-secondary mb-2" name="test"><i
+                                    class="fa fa-arrow-circle-left" aria-hidden="true"></i> &nbsp;back
+                        </button>
+                    </a>
+                {% elseif app.request.query.get("comref") and app.request.query.get("check") %}
+                    <a href="{{ path('commission', {'comref': app.request.query.get("comref") }) }}">
+                        <button type="button" class="btn btn-outline-secondary mb-2" name="test"><i
+                                    class="fa fa-arrow-circle-left" aria-hidden="true"></i> &nbsp;back
+                        </button>
+                    </a>
+                {% endif %}
+                {% if app.request.query.get("comref") and not app.request.query.get("check") %}
+                <p class="text-header"><i class="fa fa-table"></i> รายละเอียด
+                    - {{ app.request.query.get("comref") }}
+                    (ผลลัพธ์ทั้งหมด
+                    <b>{{ commissionData2.getTotalItemCount }}</b> รายการ)</p>
+                <div class="table-responsive-md">
+                    <table class="table  table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>INITIAL_REF</th>
+                            <th>ค่าคอม</th>
+                            <th>ปรับราคา</th>
+                            <th>ส่วนลด</th>
+                            {% if app.session.get("merType") == "afa" %}
+                                <th>โบนัส</th>
+                            {% endif %}
+                            <th>ยอดโอน (ก่อนหักภาษี)</th>
+                            <th>COM_CHECK</th>
+                            <th>DISCOUNT_CHECK</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {#								{% if commissionData2 is not empty %}#}
+                        {% for commission2 in commissionData2 %}
+                            <tr>
+                                <td style="text-align: center">{{ commission2.initialRef }}</td>
+                                <td style="text-align: right">{{ commission2.totalCom | number_format(2, '.', ',') }}</td>
+                                <td style="text-align: right">{{ commission2.totalAdjustedPrice | number_format(2, '.', ',') }}</td>
+                                <td style="text-align: right">{{ commission2.totalDiscount | number_format(2, '.', ',') }}</td>
+								{% if app.session.get("merType") == "afa" %}
+									<td style="text-align: right">{{ commission2.totalBonus | number_format(2, '.', ',') }}</td>
+								{% endif %}
+                                <td style="text-align: right">{{ commission2.transferAmt | number_format(2, '.', ',') }}</td>
+                                <td>
+                                    <div style="text-align:center;">
+                                        <a href="{{ path('commission', {'comref': commission2.initialRef, 'check': 'com_check' }) }}">
+                                            <button type="button"
+                                                    class="btn btn-outline-success btn-search btn-sm"
+                                                    name="test"><i class="fa fa-search" aria-hidden="true"></i> VIEW
+                                            </button>
+                                        </a></div>
+                                </td>
+                                <td>
+                                    <div style="text-align:center;">
+                                        <a href="{{ path('commission', {'comref': commission2.initialRef, 'check': 'discount_check' }) }}">
+                                            <button type="button"
+                                                    class="btn btn-outline-success btn-search btn-sm justify-content-center"
+                                                    name="test"><i class="fa fa-search" aria-hidden="true"></i> VIEW
+                                            </button>
+                                        </a></div>
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {{ knp_pagination_render(commissionData2) }}
+                </div>
+                {% elseif app.request.query.get("comref") and app.request.query.get("check") %}
+                {% if app.request.query.get("check") == 'discount_check' %}
+                    {% set check = 'DISCOUNT CHECK' %}
+                {% else %}
+                    {% set check = 'COM CHECK' %}
+                {% endif %}
+
+                <p class="text-header"><i class="fa fa-table"></i> รายละเอียด
+                    - {{ app.request.query.get("comref") }} - {{ check }}
+                    (ผลลัพธ์ทั้งหมด
+                    <b>{{ commissionData2.getTotalItemCount }}</b> รายการ)</p>
+
+
+                <div class="table-responsive-md">
+                    <table class="table table-striped  table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Inv.</th>
+                            {% if app.request.query.get("check") == 'com_check' %}
+                                <th>สินค้า</th>
+                                <th>จำนวน</th>
+                                <th>ค่าคอม</th>
+                                <th>ปรับราคา</th>
+                                {% if app.session.get("merType") == "afa" %}
+                                    <th>โบนัส</th>
+                                {% endif %}
+                                <th>ทำรายการ</th>
+                                <th>ส่งออก</th>
+                                <th>สำเร็จ</th>
+                            {% elseif app.request.query.get("check") == 'discount_check' %}
+                                <th>DISCOUNT</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for commission2 in commissionData2 %}
+                            <tr>
+                                <td style="text-align: center">{{ commission2.paymentInvoice }}</td>
+                                {% if app.request.query.get("check") == 'com_check' %}
+                                    <td style="text-align: left">{{ commission2.productName }}</td>
+                                    <td style="text-align: center">{{ commission2.productQty }}</td>
+                                    <td style="text-align: right">{{ commission2.totalCom | number_format(2, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ commission2.adjustedPrice | number_format(2, '.', ',') }}</td>
+                                    {% if app.session.get("merType") == "afa" %}
+                                        <td style="text-align: right">{{ commission2.totalBonus | number_format(2, '.', ',') }}</td>
+                                    {% endif %}
+                                    <td style="text-align: center">{{ commission2.orderdate | date('d-m-Y') }}</td>
+                                    <td style="text-align: center">{{ commission2.sendmaildate | date('d-m-Y') }}</td>
+                                    <td style="text-align: center">{{ commission2.transactiondate | date('d-m-Y') }}</td>
+                                {% elseif app.request.query.get("check") == 'discount_check' %}
+                                    <td style="text-align: right">{{ commission2.discount | number_format(2, '.', ',') }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        <tr style="background-color: #DDA0DD">
+                            <th>ยอดรวม</th>
+                            {% if app.request.query.get("check") == 'com_check' %}
+                                <th></th>
+                                <th></th>
+                                <th style="text-align: right">{{ total.total1 | number_format(2, '.', ',') }}</th>
+                                <th style="text-align: right">{{ total.total2 | number_format(2, '.', ',') }}</th>
+                            {% if app.session.get("merType") == "afa" %}
+                                <th style="text-align: right">{{ total.total3 | number_format(2, '.', ',') }}</th>
+                                {% endif %}
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            {% elseif app.request.query.get("check") == 'discount_check' %}
+                                <th style="text-align: right">{{ total.total1 | number_format(2, '.', ',') }}</th>
+                            {% endif %}
+                        </tr>
+                        </tbody>
+                    </table>
+                    {{ knp_pagination_render(commissionData2) }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {#				// End Stage 2#}
+
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(".clickable-row").click(function () {
+            $('#myForm').submit();
+        });
+    </script>
+{% endblock %}
